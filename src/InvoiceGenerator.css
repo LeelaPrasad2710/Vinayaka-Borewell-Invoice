@@ -177,6 +177,7 @@ button:hover {
   color: rgb(10, 10, 10);
   text-align: left;
   margin-top: 10px;
+  font-size: 14px;
 }
 
 /* Ensure Invoice Summary remains aligned */
