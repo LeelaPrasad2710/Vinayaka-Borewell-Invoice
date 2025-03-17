@@ -269,6 +269,7 @@ const InvoiceGenerator = () => {
       <div className="bank-details">
         <strong>Bank Details:</strong><br />
         <span>Bank: KOTAK BANK, Kathriguppe Branch</span><br />
+        <span>Branch: Kathriguppe Branch</span><br />
         <span>Account Name: DEEPAK.B V</span><br />
         <span>Account Number: 7447321040</span><br />
         <span>IFSC: KKBK0000427</span><br />
