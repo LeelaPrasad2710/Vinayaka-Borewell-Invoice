@@ -208,9 +208,9 @@ const InvoiceGenerator = () => {
   return (
     <div className="invoice-container" id="invoice-content">
       <header className="invoice-header">
-        <h1>CBN BOREWELLS</h1>
-        <p>Contact:+91 9901888883, 9845464538</p>
-        <p>#117/308, Kathriguppe Main road, BSK 3rd Stage, Bangalore 85</p>
+        <h1>SRI VINAYAKA BOREWELLS</h1>
+        <p>Contact:+91 9742888824</p>
+        <p>#1289,2nd Cross,6th Main,Kariyanapalya,Uttarahalli,Subramanyapura post,BSK 6th Stage,Banglore-98</p>
       </header>
       <div className="invoice-detailsED">
         <p>E-Bill</p>
@@ -268,11 +268,11 @@ const InvoiceGenerator = () => {
       <div className="invoice-summary-container">
       <div className="bank-details">
         <strong>Bank Details:</strong><br />
-        <span>Bank: KOTAK BANK, Kathriguppe Branch</span><br />
+        <span>Bank: UNION BANK</span><br />
         <span>Branch: Kathriguppe Branch</span><br />
-        <span>Account Name: DEEPAK.B V</span><br />
-        <span>Account Number: 7447321040</span><br />
-        <span>IFSC: KKBK0000427</span><br />
+        <span>Account Name: NARAYANA SWAMY V</span><br />
+        <span>Account Number: 117010100019005</span><br />
+        <span>IFSC: UBIN0811700</span><br />
         <strong>Authorized Signature:</strong>
       </div>
 
