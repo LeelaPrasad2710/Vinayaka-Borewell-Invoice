@@ -22,6 +22,8 @@ const InvoiceGenerator = () => {
     { description: "Drilling Charges", depth: "1301 To 1400", quantity: "", price: "", amount: 0 },
     { description: "Drilling Charges", depth: "1401 To 1500", quantity: "", price: "", amount: 0 },
     { description: "Drilling Charges", depth: "1501 To 1600", quantity: "", price: "", amount: 0 },
+    { description: "Drilling Charges", depth: "1601 To 1700", quantity: "", price: "", amount: 0 },
+    { description: "Drilling Charges", depth: "1701 To 1800", quantity: "", price: "", amount: 0 },
     { description: "Casing Pipe PVC 7\"", depth: "", quantity: "", price: "", amount: 0 },
     { description: "Casing Pipe PVC 10\"", depth: "", quantity: "", price: "", amount: 0 },
     { description: "Coller", depth: "", quantity: "", price: "", amount: 0 },
@@ -32,10 +34,9 @@ const InvoiceGenerator = () => {
   ]);
 
   const [netTotal, setNetTotal] = useState(0);
-  const [cgst, setCgst] = useState(0);
-  const [sgst, setSgst] = useState(0);
-  const [grossTotal, setGrossTotal] = useState(0);
-  const [grossTotalWords, setGrossTotalWords] = useState("");
+  const [advancePaid, setAdvancePaid] = useState(0);
+  const [amountPayable, setAmountPayable] = useState(0);
+  const [amountPayableWords, setAmountPayableWords] = useState("");
   const [to, setTo] = useState("");
   const [clientAddress, setClientAddress] = useState("");
   const [placeOfSupply, setPlaceOfSupply] = useState("");
@@ -175,40 +176,44 @@ const InvoiceGenerator = () => {
   const calculateTotal = (rows) => {
     const total = rows.reduce((sum, row) => sum + (row.amount || 0), 0);
     setNetTotal(total);
-
-    setCgst(0);
-    setSgst(0);
-    setGrossTotal(total);
-    setGrossTotalWords(numberToWords(Math.round(total)));
+    const payable = total - advancePaid;
+    setAmountPayable(payable);
+    setAmountPayableWords(numberToWords(Math.round(payable)));
   };
 
-  const calculateGST = () => {
-    if (cgst > 0 || sgst > 0) {
-      setCgst(0);
-      setSgst(0);
-      setGrossTotal(netTotal);
-      setGrossTotalWords(numberToWords(Math.round(netTotal)));
-    } else {
-      const newCgst = (netTotal * 0.09).toFixed(2);
-      const newSgst = (netTotal * 0.09).toFixed(2);
-      const newGrossTotal = (netTotal + parseFloat(newCgst) + parseFloat(newSgst)).toFixed(2);
+  const handleAdvanceChange = (event) => {
+    let value = event.target.value;
+  
 
-      setCgst(newCgst);
-      setSgst(newSgst);
-      setGrossTotal(newGrossTotal);
-      setGrossTotalWords(numberToWords(Math.round(newGrossTotal)));
+    if (value.startsWith("0") && value.length > 1) {
+      value = value.replace(/^0+/, "");
+    }
+  
+    if (value === "") {
+      setAdvancePaid(""); // Allow empty input temporarily
+      setAmountPayable(netTotal);
+      setAmountPayableWords(numberToWords(Math.round(netTotal)));
+    } else {
+      const numericValue = parseFloat(value) || 0;
+      setAdvancePaid(numericValue);
+  
+      const payable = netTotal - numericValue;
+      setAmountPayable(payable);
+      setAmountPayableWords(numberToWords(Math.round(payable)));
     }
   };
+  
+
 
   return (
     <div className="invoice-container" id="invoice-content">
       <header className="invoice-header">
-        <h1>SRI VINAYAKA BOREWELLS</h1>
-        <p>Contact:+91 9742888824</p>
-        <p>#1289, 2nd Cross, 6th Main, Kariyanapalya, Uttarahalli, Subramanyapura post, 6th Stage, Bangalore 98</p>
+        <h1>CBN BOREWELLS</h1>
+        <p>Contact:+91 9901888883, 9845464538</p>
+        <p>#117/308, Kathriguppe Main road, BSK 3rd Stage, Bangalore 85</p>
       </header>
       <div className="invoice-detailsED">
-        <p>Invoice</p>
+        <p>E-Bill</p>
       </div>
 
       <div className="invoice-details">
@@ -261,33 +266,28 @@ const InvoiceGenerator = () => {
 
 
       <div className="invoice-summary-container">
-        <div className="bank-details">
-          <p><strong>Bank Details:</strong></p>
-          <p>Bank: SBI Bank</p>
-          <p>Account Name: Sri Vinayaka Borewells</p>
-          <p>Account Number: 31691791005</p>
-          <p>IFSC: SBIN0014962</p>
-          <p><strong>Authorized Signature:</strong></p>
-        </div>
+      <div className="bank-details">
+        <strong>Bank Details:</strong><br />
+        <span>Bank: KOTAK BANK, Kathriguppe Branch</span><br />
+        <span>Account Name: DEEPAK.B V</span><br />
+        <span>Account Number: 7447321040</span><br />
+        <span>IFSC: KKBK0000427</span><br />
+        <strong>Authorized Signature:</strong>
+      </div>
 
         <div className="invoice-summary">
-          <p>Net Total: ₹{netTotal.toFixed(2)}</p>
-          <p>Add CGST 9%: ₹{cgst}</p>
-          <p>Add SGST 9%: ₹{sgst}</p>
-          <p>Gross Total: ₹{grossTotal}</p>
-          <div className="detail-row">
-            <label>GSTIN:</label>
-            <input type="text" list="gstin-options" placeholder="" />
-            <datalist id="gstin-options">
-              <option value="2025ABSOF12234" />
-            </datalist>
-          </div>
-          <p><strong>Amount in Words:</strong> {grossTotalWords} Only</p>
+          <p>Total: ₹{netTotal.toFixed(2)}</p>
+
+          <p>
+            <strong>Advance Paid:</strong>
+            <input type="number" value={advancePaid} onChange={handleAdvanceChange} />
+          </p>
+          <p><strong>Amount Payable:</strong> ₹{amountPayable.toFixed(2)}</p>
+          <p><strong>Amount in Words:</strong> {amountPayableWords}</p>
         </div>
       </div>
 
       <div className="button-container">
-        <button className="calculate-gst" onClick={calculateGST}>Calculate GST</button>
         <button className="clear-table" onClick={clearTableData}>Clear Table Data</button>
         <button className="clear-header" onClick={clearHeaderFields}>Clear Header</button>
         <button className="clear-price" onClick={clearPriceOnly}>Clear Price</button>
