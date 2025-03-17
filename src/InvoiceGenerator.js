@@ -284,7 +284,7 @@ const InvoiceGenerator = () => {
             <input type="number" value={advancePaid} onChange={handleAdvanceChange} />
           </p>
           <p><strong>Amount Payable:</strong> ₹{amountPayable.toFixed(2)}</p>
-          <p><strong>Amount in Words:</strong> {amountPayableWords}</p>
+          <p><strong>Amount in Words:</strong> {amountPayableWords} Only</p>
         </div>
       </div>
 
