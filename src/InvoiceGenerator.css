@@ -167,6 +167,11 @@ button {
   background-color: #30d4a5;
 }
 
+.gst-button {
+  background-color: #6b25db;
+}
+
+
 button:hover {
   opacity: 0.8;
 }

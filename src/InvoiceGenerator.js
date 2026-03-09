@@ -34,6 +34,9 @@ const InvoiceGenerator = () => {
   ]);
 
   const [netTotal, setNetTotal] = useState(0);
+  const [cgst, setCgst] = useState(0);
+  const [sgst, setSgst] = useState(0);
+  const [totalWithGst, setTotalWithGst] = useState(0);
   const [advancePaid, setAdvancePaid] = useState(0);
   const [amountPayable, setAmountPayable] = useState(0);
   const [amountPayableWords, setAmountPayableWords] = useState("");
@@ -42,6 +45,7 @@ const InvoiceGenerator = () => {
   const [placeOfSupply, setPlaceOfSupply] = useState("");
   const [clientGst, setclientGst] = useState("");
   const [clientContact, setclientContact] = useState("");
+  const [applyGST, setApplyGST] = useState(false);
 
 
   const deleteRow = (index) => {
@@ -173,34 +177,44 @@ const InvoiceGenerator = () => {
     calculateTotal(updatedRows);
   };
 
-  const calculateTotal = (rows) => {
+  // FIX: Added gstEnabled parameter with applyGST as default value
+  // Previously, the function referenced an undefined variable `gstEnabled`
+  const calculateTotal = (rows, gstEnabled = applyGST) => {
     const total = rows.reduce((sum, row) => sum + (row.amount || 0), 0);
     setNetTotal(total);
-    const payable = total - advancePaid;
+
+    let cgstValue = 0;
+    let sgstValue = 0;
+    let totalGST = total;
+
+    if (gstEnabled) {
+      cgstValue = total * 0.09;
+      sgstValue = total * 0.09;
+      totalGST = total + cgstValue + sgstValue;
+    }
+
+    setCgst(cgstValue);
+    setSgst(sgstValue);
+    setTotalWithGst(totalGST);
+
+    const payable = totalGST - advancePaid;
     setAmountPayable(payable);
     setAmountPayableWords(numberToWords(Math.round(payable)));
   };
 
   const handleAdvanceChange = (event) => {
-    let value = event.target.value;
-  
+   let value = event.target.value;
 
-    if (value.startsWith("0") && value.length > 1) {
-      value = value.replace(/^0+/, "");
-    }
-  
-    if (value === "") {
-      setAdvancePaid(""); // Allow empty input temporarily
-      setAmountPayable(netTotal);
-      setAmountPayableWords(numberToWords(Math.round(netTotal)));
-    } else {
-      const numericValue = parseFloat(value) || 0;
-      setAdvancePaid(numericValue);
-  
-      const payable = netTotal - numericValue;
-      setAmountPayable(payable);
-      setAmountPayableWords(numberToWords(Math.round(payable)));
-    }
+  if (value.startsWith("0") && value.length > 1) {
+    value = value.replace(/^0+/, "");
+  }
+
+  const numericValue = parseFloat(value) || 0;
+  setAdvancePaid(numericValue);
+
+  const payable = totalWithGst - numericValue;
+  setAmountPayable(payable);
+  setAmountPayableWords(numberToWords(Math.round(payable)));
   };
   
 
@@ -208,8 +222,8 @@ const InvoiceGenerator = () => {
   return (
     <div className="invoice-container" id="invoice-content">
       <header className="invoice-header">
-        <h1>SRI VINAYAKA BOREWELLS</h1>
-        <p>Contact:+91 9742888824</p>
+        <h1>SRHEE VINAYAKA BOREWELLS</h1>
+        <p>Contact : +91 9742888824, GST : 29AIQPV6664D2ZG</p>
         <p>Kariyanapalya,Subramanyapura post,BSK 6th Stage,Banglore-98</p>
       </header>
       <div className="invoice-detailsED">
@@ -279,6 +293,14 @@ const InvoiceGenerator = () => {
         <div className="invoice-summary">
           <p>Total: ₹{netTotal.toFixed(2)}</p>
 
+            {applyGST && (
+              <>
+                <p>CGST (9%): ₹{cgst.toFixed(2)}</p>
+                <p>SGST (9%): ₹{sgst.toFixed(2)}</p>
+                <p><strong>Total with GST:</strong> ₹{totalWithGst.toFixed(2)}</p>
+              </>
+            )}
+
           <p>
             <strong>Advance Paid:</strong>
             <input type="number" value={advancePaid} onChange={handleAdvanceChange} />
@@ -297,6 +319,16 @@ const InvoiceGenerator = () => {
         <button className="clear-header" onClick={clearHeaderFields}>Clear Header</button>
         <button className="clear-price" onClick={clearPriceOnly}>Clear Price</button>
         <button className="export-button" onClick={exportToPDF}>Export to PDF</button>
+        <button
+          className="gst-button"
+          onClick={() => {
+            const newValue = !applyGST;
+            setApplyGST(newValue);
+            calculateTotal(rows, newValue);
+          }}
+        >
+          {applyGST ? "Remove GST" : "Apply GST"}
+        </button>
       </div>
     </div>
   );
