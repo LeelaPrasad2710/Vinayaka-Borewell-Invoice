@@ -6,9 +6,6 @@ import html2canvas from "html2canvas";
 const InvoiceGenerator = () => {
   const [rows, setRows] = useState([
     { description: "Drilling Charges", depth: "001 To 300", quantity: "", price: "", amount: 0 },
-    // { description: "Drilling Charges", depth: "001 To 100", quantity: "", price: "", amount: 0 },
-    // { description: "Drilling Charges", depth: "101 To 200", quantity: "", price: "", amount: 0 },
-    // { description: "Drilling Charges", depth: "201 To 300", quantity: "", price: "", amount: 0 },
     { description: "Drilling Charges", depth: "301 To 400", quantity: "", price: "", amount: 0 },
     { description: "Drilling Charges", depth: "401 To 500", quantity: "", price: "", amount: 0 },
     { description: "Drilling Charges", depth: "501 To 600", quantity: "", price: "", amount: 0 },
@@ -283,10 +280,10 @@ const InvoiceGenerator = () => {
       <div className="bank-details">
         <strong>Bank Details:</strong><br />
         <span>Bank: UNION BANK</span><br />
-        <span>Branch: PoornaPragna layout</span><br />
-        <span>Account Name: Sree Vinayaka bore well</span><br />
-        <span>Account Number: 199311100001477</span><br />
-        <span>IFSC: UBIN0819930</span><br />
+        <span>Branch: Kathriguppe Branch</span><br />
+        <span>Account Name: Narayana Swamy</span><br />
+        <span>Account Number: 117010100019005</span><br />
+        <span>IFSC: UBIN0811700</span><br />
         <strong>Authorized Signature:</strong>
       </div>
 
